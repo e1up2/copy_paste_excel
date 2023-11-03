@@ -1,0 +1,23 @@
+Sub RefreshEssbase()
+    On Error GoTo ErrHandler
+
+    ' Check if the Essbase add-in is active
+    If Not AddIns("Essbase").Installed Then
+        MsgBox "Essbase add-in is not installed."
+        Exit Sub
+    End If
+
+    ' Activate the Essbase Ribbon
+    Application.Run "EssMenuShow"
+
+    ' Wait for the ribbon to load - adjust the wait time as necessary
+    Application.Wait (Now + TimeValue("0:00:02"))
+
+    ' Run the refresh command. This might be different for your add-in version.
+    Application.Run "EssbaseRetrieve"
+
+    Exit Sub
+
+ErrHandler:
+    MsgBox "An error occurred: " & Err.Description
+End Sub
