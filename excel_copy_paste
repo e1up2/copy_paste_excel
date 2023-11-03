@@ -1,0 +1,33 @@
+from openpyxl import load_workbook
+
+# Load the source workbook and the target workbook
+source_wb = load_workbook('source.xlsx')
+target_wb = load_workbook('destination.xlsx')
+
+# Select the active sheet or specific sheet from the source workbook
+source_ws = source_wb.active  # or source_wb['SheetName']
+
+# Select the active sheet or specific sheet from the target workbook
+target_ws = target_wb.active  # or target_wb['SheetName']
+
+# Now we loop over the cells in source worksheet
+# and copy to the target worksheet.
+for row in source_ws['A1:D20']:
+    for cell in row:
+        # Calculate the target cell reference
+        target_cell = target_ws[cell.coordinate]
+        
+        # Copy the cell value
+        target_cell.value = cell.value
+
+        # If you want to copy styles as well
+        if cell.has_style:
+            target_cell.font = copy(cell.font)
+            target_cell.border = copy(cell.border)
+            target_cell.fill = copy(cell.fill)
+            target_cell.number_format = copy(cell.number_format)
+            target_cell.protection = copy(cell.protection)
+            target_cell.alignment = copy(cell.alignment)
+
+# Save the target workbook
+target_wb.save('destination.xlsx')
