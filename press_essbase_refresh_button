@@ -1,20 +1,28 @@
-Sub RefreshEssbase()
+Sub RefreshEssbaseCOMAddIn()
+    Dim comAddIn As COMAddIn
+    Dim essbaseAddIn As Object ' Late binding to the add-in's application
+    
     On Error GoTo ErrHandler
-
-    ' Check if the Essbase add-in is active
-    If Not AddIns("Essbase").Installed Then
-        MsgBox "Essbase add-in is not installed."
+    ' Loop through all COM add-ins
+    For Each comAddIn In Application.COMAddIns
+        ' Check if the COM add-in is the Essbase add-in
+        If InStr(1, comAddIn.Description, "Essbase", vbTextCompare) > 0 Then
+            ' If it is, set the object variable to the add-in's application
+            Set essbaseAddIn = comAddIn.Object
+            Exit For
+        End If
+    Next comAddIn
+    
+    ' Check if the Essbase add-in was found and set
+    If essbaseAddIn Is Nothing Then
+        MsgBox "Essbase COM add-in is not available."
         Exit Sub
     End If
-
-    ' Activate the Essbase Ribbon
-    Application.Run "EssMenuShow"
-
-    ' Wait for the ribbon to load - adjust the wait time as necessary
-    Application.Wait (Now + TimeValue("0:00:02"))
-
-    ' Run the refresh command. This might be different for your add-in version.
-    Application.Run "EssbaseRetrieve"
+    
+    ' Try to call a method of the Essbase add-in to refresh
+    ' The actual method to call will depend on the Essbase add-in's object model
+    ' essbaseAddIn.Refresh or something similar
+    Call essbaseAddIn.RefreshData
 
     Exit Sub
 
