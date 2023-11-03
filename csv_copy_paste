@@ -1,0 +1,24 @@
+import csv
+from openpyxl import Workbook
+
+# Create a new Workbook - this will be your destination Excel file
+wb = Workbook()
+ws = wb.active
+
+# Open the CSV (txt) file and create a csv.reader object
+with open('source.txt', 'r', newline='', encoding='utf-8') as file:
+    reader = csv.reader(file)
+    for row_index, row in enumerate(reader, start=1):
+        # Assuming you only want to read and write up to row 20 and column D (index 4)
+        if row_index > 20:
+            break
+        for col_index, value in enumerate(row[:4], start=1):  # Slicing to the first 4 columns (A to D)
+            ws.cell(row=row_index, column=col_index, value=value)
+
+# Save the workbook to the new Excel file
+wb.save('destination.xlsx')
+
+
+
+
+
